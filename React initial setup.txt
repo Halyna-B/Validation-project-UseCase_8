@@ -1,0 +1,105 @@
+My next steps:
+- Install redux/react-redux for state management
+- Configure Store: Create a store for the application to store first name, last name, email and message.
+ChatGPT
+Let's proceed with the installation of redux and react-redux for state management, and then create a store for the application.
+
+Step 1: Install redux and react-redux
+
+If you have not installed redux already in the previous steps, please do so with the following command:
+
+bash
+Copy code
+npm install redux
+Then, install react-redux, which allows you to connect your React components with the Redux store:
+
+bash
+Copy code
+npm install react-redux
+Step 2: Configure the Store
+
+Next, let's create the Redux store. First, create a new directory in the src directory of your project named redux. Inside this directory, create two more directories: actions and reducers.
+
+bash
+Copy code
+mkdir -p src/redux/actions src/redux/reducers
+In src/redux/reducers, create a new file named userReducer.js:
+
+javascript
+Copy code
+const initialState = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  message: ''
+};
+
+const userReducer = (state = initialState, action) => {
+  switch(action.type) {
+    case 'UPDATE_USER':
+      return {
+        ...state,
+        ...action.payload
+      };
+    default:
+      return state;
+  }
+};
+
+export default userReducer;
+This reducer initializes the state of your application with an object that has firstName, lastName, email, and message properties. when it receives an action of type 'UPDATE_USER', it merges the action's payload into the state.
+
+In src/redux/actions, create a new file named userActions.js:
+
+javascript
+Copy code
+export const updateUser = (user) => {
+  return {
+    type: 'UPDATE_USER',
+    payload: user
+  };
+};
+This is an action creator function. It takes a user object as an argument and returns an action that has this object as its payload.
+
+Finally, create a new file named store.js in the src/redux directory:
+
+javascript
+Copy code
+import { createStore } from 'redux';
+import userReducer from './reducers/userReducer';
+
+const store = createStore(userReducer);
+
+export default store;
+This file creates the Redux store with your userReducer.
+
+Remember to import the Provider component from react-redux and pass the store to it in your main src/index.js file:
+
+javascript
+Copy code
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import App from './App';
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+The Provider component makes the Redux store available to any nested components that access it through the connect function (or useSelector hook).
+
+Commit and push your changes to GitHub:
+
+bash
+Copy code
+git add .
+git commit -m "Configure Redux store"
+git push origin main
+You now have a Redux store in your React app and a reducer for handling user data. in the next steps, you'll create React components that read from and dispatch actions to the Redux store.
+
+Let me know if you need help with the next steps!
