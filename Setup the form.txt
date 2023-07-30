@@ -1,0 +1,126 @@
+My next steps:
+ - Create a form component(s) so user can enter the next fields: First Name, Last Name, Email and Message
+ - Add validation functionality for all the fields
+ - Add a submit button so when a user clicks on it, the app will add entered values to the store (user should not be able to click submit button when at least one field is not valid
+
+ChatGPT
+Let's create a form component with the required fields and implement validation and submit functionality.
+
+Step 1: Create Form Component
+
+Create a new file UserForm.js in your src directory:
+
+jsx
+Copy code
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { updateUser } from './redux/actions/userActions';
+import validator from 'validator';
+
+const UserForm = () => {
+  const dispatch = useDispatch();
+
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    message: '',
+  });
+
+  const [error, setError] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    message: false,
+  });
+
+  const handleInputChange = (event) => {
+    setUser({
+      ...user,
+      [event.target.name]: event.target.value
+    });
+
+    // Clear error
+    setError({
+      ...error,
+      [event.target.name]: false
+    });
+  };
+
+  const validate = () => {
+    const newErrors = {
+      firstName: user.firstName.trim() === '',
+      lastName: user.lastName.trim() === '',
+      email: !validator.isEmail(user.email),
+      message: user.message.trim() === ''
+    };
+
+    setError(newErrors);
+
+    // Return true if no errors
+return !Object.values(newErrors).includes(true);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (validate()) {
+      dispatch(updateUser(user));
+      alert('Data submitted successfully');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" name="firstName" placeholder="First Name" value={user.firstName} onChange={handleInputChange} />
+      {error.firstName && <p>First name is required</p>}
+
+      <input type="text" name="lastName" placeholder="Last Name" value={user.lastName} onChange={handleInputChange} />
+      {error.lastName && <p>Last name is required</p>}
+
+      <input type="email" name="email" placeholder="Email" value={user.email} onChange={handleInputChange} />
+      {error.email && <p>Email is not valid</p>}
+
+      <textarea name="message" placeholder="Message" value={user.message} onChange={handleInputChange} />
+      {error.message && <p>Message is required</p>}
+
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
+
+export default UserForm;
+In this file, you're creating a controlled form with local state. when the form fields change, their values are updated in the component's state. the handleInputChange function is called whenever an input field changes.
+
+The validate function is called when the form is submitted. It validates the user's input and updates the error state.
+
+If there are no validation errors, the handleSubmit function dispatches the updateUser action to the Redux store, which updates the store's state with the user's input.
+
+Step 2: Add Form Component to your App
+
+Now, let's add the UserForm component to your App component. Edit the src/App.js file:
+
+jsx
+Copy code
+import React from 'react';
+import UserForm from './UserForm';
+
+function App() {
+  return (
+    <div className="App">
+      <UserForm />
+    </div>
+  );
+}
+
+export default App;
+Now, you should be able to see the form when you run your application. when you fill out the form and click "Submit", it will validate your input. if your input is valid, it will be added to the Redux store.
+
+Don't forget to commit and push your changes to GitHub:
+
+bash
+Copy code
+git add .
+git commit -m "Add UserForm component with validation"
+git push origin main
+Let me know if you have any questions or need further clarification!
