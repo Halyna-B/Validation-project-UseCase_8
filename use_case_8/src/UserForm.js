@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateUser } from './redux/actions/userActions';
+import { addUser } from './redux/actions/userActions';
 import validator from 'validator';
+import './UserForm.css';
 
 export const UserForm = () => {
     const dispatch = useDispatch();
@@ -49,8 +50,15 @@ export const UserForm = () => {
         event.preventDefault();
 
         if (validate()) {
-            dispatch(updateUser(user));
+            dispatch(addUser(user));
             alert('Data submitted successfully');
+
+            setUser({
+                firstName: '',
+                lastName: '',
+                email: '',
+                message: '',
+            });
         }
     };
 

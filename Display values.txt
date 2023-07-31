@@ -1,0 +1,507 @@
+And the next step is:
+Display a list (could be table) of values in store
+ChatGPT
+Let's create a new React component to display the stored user data.
+
+Step 1: Create UserList Component
+
+Create a new file UserList.js in your src directory:
+
+jsx
+Copy code
+import React from 'react';
+import { useSelector } from 'react-redux';
+
+const UserList = () => {
+  const users = useSelector(state => state.users);
+
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        {users.map((user, index) => (
+          <tr key={index}>
+            <td>{user.firstName}</td>
+            <td>{user.lastName}</td>
+            <td>{user.email}</td>
+            <td>{user.message}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};
+
+export default UserList;
+This UserList component uses the useSelector hook from react-redux to access the list of users from the Redux store. it then maps over this array to create a new table row for each user.
+
+Step 2: Add UserList Component to your App
+
+Now, let's add the UserList component to your App component. Edit the src/App.js file:
+
+jsx
+Copy code
+import React from 'react';
+import UserForm from './UserForm';
+import UserList from './UserList';
+
+function App() {
+  return (
+    <div className="App">
+      <UserForm />
+      <UserList />
+    </div>
+  );
+}
+
+export default App;
+Now, when you run your application, you should be able to see a list of users below the form. Every time you submit the form, the new user should be added to this list.
+
+You can add some basic styling to the table in the UserForm.css file or create a new CSS file UserList.css and import it in UserList.js.
+
+Once done, commit and push your changes to GitHub:
+
+bash
+Copy code
+git add .
+git commit -m "Add UserList component to display stored user data"
+git push origin main
+Let me know if you have any questions or need further clarification!
+
+
+
+
+User
+And let's add styles for table maybe?
+ChatGPT
+Absolutely! Let's add some basic styles to your table. You can adjust these styles as you see fit.
+
+Create a new file UserList.css in your src directory:
+
+css
+Copy code
+table {
+margin: 0 auto;
+  width: 80%;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+th {
+  background-color: #4CAF50;
+  color: white;
+}
+This will give a basic style to your table, table headers, and table data. The table headers have a green background color and white text, and the table rows have alternate colors for better readability.
+
+You'll need to import this CSS file in your UserList.js. Add this line at the top of the file:
+
+jsx
+Copy code
+import './UserList.css';
+Now, your table should have a nice and clean style.
+
+Once done, commit and push your changes to GitHub:
+
+bash
+Copy code
+git add .
+git commit -m "Add style to UserList table"
+git push origin main
+Let me know if you have any further questions or steps you'd like to go through!
+
+
+
+
+User
+I think the UserList.js component has some mistakes.
+Unresolved variable users
+ChatGPT
+Apologies for the confusion. We're trying to access the state from Redux store. The useSelector hook lets us extract data from the Redux store state, but we need to access the exact part of the state where our users' data is stored.
+
+Assuming that you have stored your users' data in a part of your state named users, the code should work. But if you have a different structure for your Redux store, you'll need to adjust the parameter given to useSelector.
+
+For example, if you've stored your users in a state structure like this:
+
+javascript
+Copy code
+{
+  formData: {
+    users: [...]
+  }
+}
+You would need to access state.formData.users in your useSelector hook:
+
+javascript
+Copy code
+const users = useSelector(state => state.formData.users);
+The argument to useSelector should reflect the shape of your Redux store.
+
+Please replace state.users with the correct path to your users array in your state, and it should resolve the issue. If you need further clarification or face any more issues, feel free to ask!
+
+
+
+
+User
+ok, GPT-4, the submitted form is working incorrect, cause when user fills in the fields and click submit it doesn't display in the table. Please can you check the code?
+ChatGPT
+Sure, I'd be glad to help. However, without seeing the exact code, it's a bit challenging to pinpoint the exact problem.
+
+Let's revisit some key parts of your React-Redux setup.
+
+1. Redux Store & Reducer
+
+Your Redux store is configured correctly, and the reducer is managing the user's slice of state, right? For example:
+
+javascript
+Copy code
+const initialState = {
+  users: [],
+};
+
+function userReducer(state = initialState, action) {
+  switch (action.type) {
+    case "ADD_USER":
+      return { ...state, users: [...state.users, action.payload] };
+    default:
+      return state;
+  }
+}
+2. Action Dispatch in Form Component
+
+Are you dispatching the ADD_USER action correctly when the form is submitted? Your handleSubmit function in the UserForm component should look something like this:
+
+jsx
+Copy code
+function handleSubmit(e) {
+  e.preventDefault();
+
+  if (isValid) {
+    dispatch({ type: "ADD_USER", payload: { firstName, lastName, email, message } });
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setMessage("");
+  }
+}
+3. Data Display in UserList Component
+
+In the UserList component, you're pulling the users slice of state using the useSelector hook and mapping through it to display the user data, right? For example:
+
+jsx
+Copy code
+const users = useSelector((state) => state.users);
+
+return (
+  <table>
+    // Table headers...
+    <tbody>
+      {users.map((user, index) => (
+        <tr key={index}>
+          <td>{user.firstName}</td>
+          <td>{user.lastName}</td>
+          <td>{user.email}</td>
+          <td>{user.message}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
+If you've followed these steps and are still facing issues, it would be helpful to see your current code. There might be an error or oversight that we could quickly identify and correct.
+
+
+
+
+User
+let me send you my code, please correct if its necessary:
+
+userReducer.js:
+const initialState = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    message: ''
+};
+
+export const userReducer = (state = initialState, action) => {
+    switch(action.type) {
+        case 'UPDATE_USER':
+return {
+                ...state,
+                ...action.payload
+            };
+        default:
+            return state;
+    }
+};
+
+userActions.js
+export const updateUser = (user) => {
+    return {
+        type: 'UPDATE_USER',
+        payload: user
+    };
+};
+
+store.js:
+import { createStore } from 'redux';
+import { userReducer } from './reducers/userReducer';
+
+export const store = createStore(userReducer);
+
+UserForm.js:
+export const UserForm = () => {
+    const dispatch = useDispatch();
+
+    const [user, setUser] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        message: '',
+    });
+
+    const [error, setError] = useState({
+        firstName: false,
+        lastName: false,
+        email: false,
+        message: false,
+    });
+
+    const handleInputChange = (event) => {
+        setUser({
+            ...user,
+            [event.target.name]: event.target.value
+        });
+
+        setError({
+            ...error,
+            [event.target.name]: false
+        });
+    };
+
+    const validate = () => {
+        const newErrors = {
+            firstName: user.firstName.trim() === '',
+            lastName: user.lastName.trim() === '',
+            email: !validator.isEmail(user.email),
+            message: user.message.trim() === ''
+        };
+
+        setError(newErrors);
+
+        return !Object.values(newErrors).includes(true);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+
+        if (validate()) {
+            dispatch(updateUser(user));
+            alert('Data submitted successfully');
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <input type="text" name="firstName" placeholder="First Name" value={user.firstName} onChange={handleInputChange} />
+            {error.firstName && <p>First name is required</p>}
+
+            <input type="text" name="lastName" placeholder="Last Name" value={user.lastName} onChange={handleInputChange} />
+            {error.lastName && <p>Last name is required</p>}
+
+            <input type="email" name="email" placeholder="Email" value={user.email} onChange={handleInputChange} />
+            {error.email && <p>Email is not valid</p>}
+
+            <textarea name="message" placeholder="Message" value={user.message} onChange={handleInputChange} />
+            {error.message && <p>Message is required</p>}
+
+            <button type="submit">Submit</button>
+        </form>
+    );
+};
+
+UserList.js:
+export const UserList = () => {
+    const users = useSelector(state => state.user);
+
+    return (
+        <table>
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Message</th>
+            </tr>
+            </thead>
+            <tbody>
+            {users?.map((user, index) => (
+                <tr key={index}>
+                    <td>{user.firstName}</td>
+                    <td>{user.lastName}</td>
+                    <td>{user.email}</td>
+                    <td>{user.message}</td>
+                </tr>
+            ))}
+
+ChatGPT
+I see the issue now. Your state in Redux store is not set up to hold multiple users. Instead, it only holds a single user. To fix the issue, you should change your Redux state structure and actions.
+
+Your initial state in userReducer.js should look like this:
+
+javascript
+Copy code
+const initialState = {
+    users: [],
+};
+Your action in userActions.js should look like this:
+
+javascript
+Copy code
+export const addUser = (user) => {
+    return {
+        type: 'ADD_USER',
+        payload: user
+    };
+};
+Your userReducer in userReducer.js should look like this:
+
+javascript
+Copy code
+export const userReducer = (state = initialState, action) => {
+    switch(action.type) {
+        case 'ADD_USER':
+            return {
+                ...state,
+                users: [...state.users, action.payload]
+            };
+        default:
+            return state;
+    }
+};
+Now in UserForm.js, you need to use addUser action. Change the import statement to:
+
+javascript
+Copy code
+import { addUser } from './userActions';
+And in your handleSubmit function, dispatch addUser instead of updateUser:
+
+javascript
+Copy code
+const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (validate()) {
+        dispatch(addUser(user));
+        alert('Data submitted successfully');
+    }
+};
+Now, your UserList.js component can access the array of users from the state and iterate over it like so:
+
+javascript
+Copy code
+export const UserList = () => {
+    const users = useSelector(state => state.users);
+
+    // Rest of your component code
+};
+Try making these changes and then check if the form submission displays users in the table. This setup allows you to store multiple users in the Redux state, which are then displayed in the table.
+
+
+
+
+User
+Ok, but I think we should clear the form fields after submitting. How can I do these steps
+ChatGPT
+Sure, you can clear the form fields after submitting the form by resetting the user state back to its initial state. You can do this within the handleSubmit function in your UserForm.js file, just after the dispatch call. Here's how to do it:
+
+javascript
+Copy code
+const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (validate()) {
+        dispatch(addUser(user));
+        alert('Data submitted successfully');
+
+        // Reset form fields
+        setUser({
+            firstName: '',
+            lastName: '',
+            email: '',
+            message: '',
+        });
+    }
+};
+This way, each time a user successfully submits the form, all the input fields will be reset to empty strings, giving a clear form for the next submission.
+
+
+
+
+User
+Ok, got it. In console, I have warning: Warning: ReactDOM.render is no longer supported in React 18. Use createRoot instead. Until you switch to the new API, your app will behave as if it's running React 17. Learn more: https://reactjs.org/link/switch-to-createroot.
+
+And this is my index.js:
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+import App from './App';
+import './index.css';
+
+ReactDOM.render(
+    <React.StrictMode>
+        <Provider store={store}>
+            <App />
+        </Provider>
+    </React.StrictMode>,
+    document.getElementById('root')
+);
+
+What should I change?
+ChatGPT
+In React 18, ReactDOM.render() is replaced with ReactDOM.createRoot(). Here's how to use the new createRoot() API in your index.js file:
+
+jsx
+Copy code
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
+import App from './App';
+import './index.css';
+
+const root = document.getElementById('root');
+
+if (!root) throw new Error ("No root element found");
+
+ReactDOM.createRoot(root).render(
+    <React.StrictMode>
+        <Provider store={store}>
+            <App />
+        </Provider>
+    </React.StrictMode>
+);
+This new API is designed to support concurrent mode and other new features in React. For most apps, switching to createRoot should be straightforward and bring a number of improvements, including better performance, improved UX through concurrent features, automatic batching, and more.
+
+Please note that while createRoot has many advantages, it might not be compatible with all packages that are designed to work with the older ReactDOM.render(). Check if all the packages you're using in your project are compatible with createRoot before making the switch.
+
+If you encounter problems or incompatibilities with third-party libraries, you may need to stick with ReactDOM.render() until these libraries are updated or alternatives are found.
