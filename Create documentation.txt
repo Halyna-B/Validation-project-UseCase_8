@@ -1,0 +1,57 @@
+Ok, and the last one:
+- Update Readme.md with
+Application description: 2 paragraphs, 4-10 Sentences.
+Information on how to install/run the developed application locally.
+
+
+ChatGPT
+Sure, here is a sample update for your README.md file:
+
+User Form with React, Redux and Validation
+Description
+This application is a simple but robust implementation of a user form using React, Redux, and Validator. It allows users to input their First Name, Last Name, Email, and a Message. On submission, the user inputs are validated to ensure they are not empty and that the email format is correct. Once validated, the data is stored in a Redux store.
+
+The application also provides a feature to display the stored user data in a table format. This list component fetches the stored data from the Redux store and presents it neatly in a table. Styling for the form and table are also added to improve the visual appeal of the application. All these functionalities are tested thoroughly using Jest, a testing framework for JavaScript.
+
+Installation and Running Locally
+You would need Node.js and npm installed on your local machine to run this application locally.
+
+Step 1: Clone the Repository
+
+First, you need to clone the repository to your local machine. You can do this by running the following command:
+
+bash
+Copy code
+git clone <repository-url>
+Replace <repository-url> with the URL of this GitHub repository.
+
+Step 2: Install Dependencies
+
+Navigate into the cloned repository and install the necessary dependencies using npm:
+
+bash
+Copy code
+cd <repository-folder-name>
+npm install
+Replace <repository-folder-name> with the name of the folder where the repository was cloned.
+
+Step 3: Start the Application
+
+Finally, you can start the application by running:
+
+bash
+Copy code
+npm start
+After running this command, you should be able to access the application at http://localhost:3000.
+
+Folder Structure
+The project has a modular structure with specific folders for the major functionalities:
+
+.github: Contains GitHub workflow files.
+public: Holds all static files and the index.html file.
+src: Contains the React JavaScript files.
+redux: Inside src, contains the Redux state management files.
+__tests__: Inside src contains the Jest test files.
+each component has its own CSS and test files for better separation of concerns and easy maintainability. the application entry point is index.js file under src folder.
+
+This README.md provides an overview of the project, instructions on how to run it locally, and information about the project structure. Feel free to customize it to better suit your project.
