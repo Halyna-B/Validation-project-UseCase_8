@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import { userReducer } from './redux/reducers/userReducer';
-import { UserForm } from './UserForm';
+import { userReducer } from '../redux/reducers/userReducer';
+import { UserForm } from './index';
 
 
 describe('UserForm', () => {

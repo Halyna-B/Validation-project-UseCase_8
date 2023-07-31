@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addUser } from './redux/actions/userActions';
+import { addUser } from '../redux/actions/userActions';
 import validator from 'validator';
 import './UserForm.css';
 
